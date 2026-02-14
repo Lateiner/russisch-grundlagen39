@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lernkartei: Russisch - Deutsch</title>
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #e8f5e9;
+            --accent-green: #4caf50;
+            --dark-green: #1b5e20;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-green);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--dark-green);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .progress-container {
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: var(--primary-green);
+            font-size: 1.1rem;
+        }
+
+        /* Kartengröße und 3D-Effekt */
+        .flashcard-container {
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            perspective: 1000px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .flashcard {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            box-shadow: var(--shadow);
+            border-radius: 15px;
+        }
+
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            border-radius: 15px;
+            background-color: var(--card-bg);
+            border: 2px solid var(--primary-green);
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            background-color: var(--light-green);
+        }
+
+        .card-content {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            line-height: 1.4;
+        }
+
+        .side-label {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--accent-green);
+            letter-spacing: 1px;
+        }
+
+        /* Buttons */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 600px;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            background-color: var(--primary-green);
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: var(--accent-green);
+        }
+
+        button:active {
+            transform: translateY(2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--dark-green);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .meta-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .shortcuts-hint {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 480px) {
+            .flashcard-container {
+                height: 250px;
+            }
+            button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Vokabel-Lernkartei</h1>
+        <p>Passiv-Partizipien & Basiswortschatz</p>
+    </header>
+
+    <div class="progress-container">
+        Karte <span id="current-index">1</span> / <span id="total-cards">0</span>
+    </div>
+
+    <div class="flashcard-container" onclick="toggleFlip()" id="flashcard-container">
+        <div class="flashcard" id="card-element">
+            <div class="card-face card-front">
+                <span class="side-label">Russisch</span>
+                <div class="card-content" id="front-text">Vorderseite</div>
+            </div>
+            <div class="card-face card-back">
+                <span class="side-label">Deutsch</span>
+                <div class="card-content" id="back-text">Rückseite</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="nav-buttons">
+            <button onclick="prevCard()">← Vorherige</button>
+            <button onclick="nextCard()">Nächste →</button>
+        </div>
+        <div class="meta-buttons">
+            <button class="btn-secondary" onclick="shuffleCards()">Mischen</button>
+            <button class="btn-secondary" onclick="goToStart()">An den Anfang</button>
+        </div>
+    </div>
+
+    <div class="shortcuts-hint">
+        Tastenkürzel: <strong>Leertaste/Enter</strong>: Umdrehen | <strong>Pfeiltasten</strong>: Navigation | <strong>Pos1</strong>: Anfang
+    </div>
+
+    <script>
+        // Die Vokabelliste
+        const rawData = `1.	чита́ть / прочита́ть – lesen
+2.	писа́ть / написа́ть – schreiben
+3.	стро́ить / постро́ить – bauen
+4.	реша́ть / реши́ть – lösen, entscheiden
+5.	открыва́ть / откры́ть – öffnen
+6.	закрыва́ть / закры́ть – schließen
+7.	покупа́ть / купи́ть – kaufen
+8.	де́лать / сде́лать – machen, tun
+9.	ви́деть / уви́деть – sehen, erblicken
+10.	забыва́ть / забы́ть – vergessen
+11.	получа́ть / получе́ть – erhalten, bekommen
+12.	приглаша́ть / пригласи́ть – einladen
+13.	переводи́ть / перевести́ – übersetzen
+14.	мыть / помы́ть – waschen, putzen
+15.	брать / взять – nehmen
+16.	петь / спеть – singen
+17.	се́ять / посе́ять – säen
+18.	приноси́ть / принести́ – bringen
+19.	гото́вить / пригото́вить – zubereiten, kochen
+20.	теря́ть / потеря́ть – verlieren
+21.	встреча́ть / встре́тить – treffen, begegnen
+22.	освобожда́ть / освободи́ть – befreien, entlassen
+23.	выража́ть / вы́разить – ausdrücken
+24.	выра́щивать / выра́стить – aufziehen, züchten
+25.	оставля́ть / оста́вить – lassen, verlassen
+26.	употребля́ть / употреби́ть – gebrauchen, verwenden
+27.	лома́ть / сломи́ть – brechen
+28.	дари́ть / подари́ть – schenken
+29.	рисова́ть / нарисова́ть – zeichnen, malen
+30.	кни́га – Buch
+31.	письмо́ – Brief
+32.	текст – Text
+33.	дом – Haus
+34.	зада́ние – Aufgabe (Hausaufgabe)
+35.	зада́ча – Aufgabe (Problemstellung)
+36.	дверь – Tür
+37.	окно́ – Fenster
+38.	пода́рок – Geschenk
+39.	а́втор – Autor
+40.	тетра́дь – Heft
+41.	пе́вица – Sängerin
+42.	пе́сня – Lied
+43.	ребёнок / де́ти – Kind / Kinder
+44.	шкаф – Schrank
+45.	оши́бка – Fehler
+46.	учи́тель – Lehrer
+47.	фильм – Film
+48.	статья́ – Artikel
+49.	откры́тка – Postkarte
+50.	цвето́к / цветы́ – Blume / Blumen
+51.	ру́чка – Kugelschreiber
+52.	пи́цца – Pizza
+53.	зда́ние – Gebäude
+54.	фаса́д – Fassade
+55.	за́втра – morgen
+56.	вчера́ – gestern
+57.	сего́дня – heute
+58.	ле́то – Sommer
+59.	магази́н – Geschäft, Laden
+60.	у́жин – Abendessen`;
+
+        let cards = [];
+        let currentIndex = 0;
+
+        // Daten verarbeiten
+        function parseData() {
+            const lines = rawData.trim().split('\n');
+            cards = lines.map(line => {
+                // Entferne Nummerierung am Anfang (z.B. "1. ")
+                const cleanLine = line.replace(/^\d+\.\s*/, '');
+                const parts = cleanLine.split(' – ');
+                return {
+                    front: parts[0] ? parts[0].trim() : "",
+                    back: parts[1] ? parts[1].trim() : ""
+                };
+            });
+            document.getElementById('total-cards').textContent = cards.length;
+        }
+
+        function updateDisplay() {
+            const card = cards[currentIndex];
+            const frontTextElem = document.getElementById('front-text');
+            const backTextElem = document.getElementById('back-text');
+            
+            // Karte zurückdrehen bevor Inhalt gewechselt wird
+            document.getElementById('card-element').classList.remove('is-flipped');
+
+            // Timeout für den Inhaltswechsel, damit man ihn nicht während der Drehung sieht
+            setTimeout(() => {
+                frontTextElem.textContent = card.front;
+                backTextElem.textContent = card.back;
+                
+                // Schriftgröße anpassen
+                adjustFontSize(card.front, frontTextElem);
+                adjustFontSize(card.back, backTextElem);
+                
+                document.getElementById('current-index').textContent = currentIndex + 1;
+            }, 150);
+        }
+
+        function adjustFontSize(text, element) {
+            const length = text.length;
+            if (length > 50) {
+                element.style.fontSize = "1.1rem";
+            } else if (length > 30) {
+                element.style.fontSize = "1.3rem";
+            } else if (length > 20) {
+                element.style.fontSize = "1.6rem";
+            } else {
+                element.style.fontSize = "2rem";
+            }
+        }
+
+        function toggleFlip() {
+            document.getElementById('card-element').classList.toggle('is-flipped');
+        }
+
+        function nextCard() {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+                updateDisplay();
+            } else {
+                // Optional: Zum Anfang springen
+                currentIndex = 0;
+                updateDisplay();
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateDisplay();
+            } else {
+                currentIndex = cards.length - 1;
+                updateDisplay();
+            }
+        }
+
+        function goToStart() {
+            currentIndex = 0;
+            updateDisplay();
+        }
+
+        function shuffleCards() {
+            // Fisher-Yates Shuffle
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cards[i], cards[j]] = [cards[j], cards[i]];
+            }
+            currentIndex = 0;
+            updateDisplay();
+        }
+
+        // Tastatursteuerung
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'Enter') {
+                e.preventDefault(); // Verhindert Scrollen bei Leertaste
+                toggleFlip();
+            } else if (e.code === 'ArrowRight') {
+                nextCard();
+            } else if (e.code === 'ArrowLeft') {
+                prevCard();
+            } else if (e.code === 'Home') {
+                goToStart();
+            }
+        });
+
+        // Initialisierung
+        parseData();
+        updateDisplay();
+    </script>
+</body>
+</html>
