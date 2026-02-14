@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fehleranalyse: Passive Partizipien Präteritum</title>
+    <!-- Polyfill für Drag & Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e67e22;
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .intro-box {
+            background: #eef7fd;
+            border-left: 5px solid var(--secondary-color);
+            padding: 20px;
+            margin-bottom: 35px;
+            border-radius: 4px;
+        }
+
+        .exercise-card {
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            background: #fff;
+        }
+
+        .exercise-title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            font-size: 1.1em;
+        }
+
+        .sentence-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 2;
+        }
+
+        .error-highlight {
+            color: var(--error-color);
+            text-decoration: underline dotted;
+            font-weight: bold;
+        }
+
+        select {
+            padding: 6px 10px;
+            font-size: 1rem;
+            border: 2px solid #ced4da;
+            border-radius: 6px;
+            background-color: white;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* Buttons */
+        .button-row {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        button.action-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); color: white; }
+        .btn-reset { background-color: #adb5bd; color: white; }
+        .btn-solution { background-color: #fff; color: var(--success-color); border: 2px solid var(--success-color); }
+
+        button.action-btn:hover { opacity: 0.8; }
+
+        /* Status-Farben */
+        .correct { border-color: var(--success-color) !important; color: var(--success-color) !important; background-color: #f0fff4 !important; }
+        .incorrect { border-color: var(--error-color) !important; background-color: #fff5f0 !important; }
+        
+        .sol-active { 
+            color: var(--success-color) !important; 
+            font-weight: bold !important; 
+            border: 2px solid var(--success-color) !important;
+            background-color: #f0fff4 !important;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .button-row { flex-direction: column; }
+            .button-row button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Fehleranalyse: Passive Partizipien</h1>
+
+    <div class="intro-box">
+        <strong>Anleitung:</strong>
+        <p>In den folgenden Sätzen hat sich jeweils ein Fehler eingeschlichen. Wähle im Auswahlmenü die <strong>korrekte Form</strong> aus, um den Satz zu heilen. Achte auf Suffixe, Konsonantenwechsel, Endungen und Kommas.</p>
+    </div>
+
+    <!-- AUFGABE 1 -->
+    <div class="exercise-card" id="ex1">
+        <span class="exercise-title">1. Konsonantenwechsel (п &rarr; пл):</span>
+        <div class="sentence-box">
+            Это была <span class="error-highlight">купинная</span> в магазине книга.
+        </div>
+        Korrektur: 
+        <select data-ans="купленная">
+            <option value="">-- wählen --</option>
+            <option value="купитая">купитая</option>
+            <option value="купленная">купленная</option>
+            <option value="купинная">купинная</option>
+        </select>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex1')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex1')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex1')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 2 -->
+    <div class="exercise-card" id="ex2">
+        <span class="exercise-title">2. Suffix-Bildung (-ать &rarr; -нн-):</span>
+        <div class="sentence-box">
+            Текст был <span class="error-highlight">прочитаенный</span> мною вчера.
+        </div>
+        Korrektur: 
+        <select data-ans="прочитанный">
+            <option value="">-- wählen --</option>
+            <option value="прочитанный">прочитанный</option>
+            <option value="прочитённый">прочитённый</option>
+            <option value="прочитатый">прочитатый</option>
+        </select>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex2')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex2')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex2')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 3 -->
+    <div class="exercise-card" id="ex3">
+        <span class="exercise-title">3. Interpunktion (Stellung nach dem Substantiv):</span>
+        <div class="sentence-box">
+            Дом <span class="error-highlight">(hier fehlt etwas)</span> построенный рабочими, стоит на горе.
+        </div>
+        Korrektur: 
+        <select data-ans=",">
+            <option value="">-- wählen --</option>
+            <option value=",">ein Komma ( , )</option>
+            <option value="kein">kein Zeichen</option>
+        </select>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex3')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex3')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex3')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 4 -->
+    <div class="exercise-card" id="ex4">
+        <span class="exercise-title">4. Kasus-Endung (Akkusativ feminin):</span>
+        <div class="sentence-box">
+            Я вижу <span class="error-highlight">написанная</span> автором статью.
+        </div>
+        Korrektur: 
+        <select data-ans="написанную">
+            <option value="">-- wählen --</option>
+            <option value="написанной">написанной</option>
+            <option value="написанную">написанную</option>
+            <option value="написанную">написанную</option>
+        </select>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex4')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex4')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex4')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 5 -->
+    <div class="exercise-card" id="ex5">
+        <span class="exercise-title">5. Konsonantenwechsel (т &rarr; ч):</span>
+        <div class="sentence-box">
+            Это был <span class="error-highlight">встретиный</span> нами друг.
+        </div>
+        Korrektur: 
+        <select data-ans="встреченный">
+            <option value="">-- wählen --</option>
+            <option value="встретенный">встретенный</option>
+            <option value="встреченный">встреченный</option>
+            <option value="встретитый">встретитый</option>
+        </select>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex5')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex5')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex5')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 6 -->
+    <div class="exercise-card" id="ex6">
+        <span class="exercise-title">6. Genus-Kongruenz (Neutrum):</span>
+        <div class="sentence-box">
+            Письмо, <span class="error-highlight">полученная</span> мною, лежало на столе.
+        </div>
+        Korrektur: 
+        <select data-ans="полученное">
+            <option value="">-- wählen --</option>
+            <option value="полученный">полученный</option>
+            <option value="полученное">полученное</option>
+            <option value="полученны">полученны</option>
+        </select>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex6')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex6')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex6')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 7 -->
+    <div class="exercise-card" id="ex7">
+        <span class="exercise-title">7. Suffix-Check bei „machen“:</span>
+        <div class="sentence-box">
+            Проект был <span class="error-highlight">сделаенный</span> вовремя.
+        </div>
+        Korrektur: 
+        <select data-ans="сделанный">
+            <option value="">-- wählen --</option>
+            <option value="сделанный">сделанный</option>
+            <option value="сделованный">сделованный</option>
+            <option value="сделенный">сделенный</option>
+        </select>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex7')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex7')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex7')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 8 -->
+    <div class="exercise-card" id="ex8">
+        <span class="exercise-title">8. Interpunktion (Stellung vor dem Substantiv):</span>
+        <div class="sentence-box">
+            Приготовленный мамой <span class="error-highlight">,</span> ужин был вкусным.
+        </div>
+        Korrektur: 
+        <select data-ans="X">
+            <option value="">-- wählen --</option>
+            <option value=",">das Komma behalten</option>
+            <option value="X">Komma entfernen (kein Zeichen)</option>
+        </select>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex8')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex8')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex8')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 9 -->
+    <div class="exercise-card" id="ex9">
+        <span class="exercise-title">9. Konsonantenwechsel (д &rarr; жд):</span>
+        <div class="sentence-box">
+            Преступник был <span class="error-highlight">освободенный</span> из тюрьмы.
+        </div>
+        Korrektur: 
+        <select data-ans="освобождённый">
+            <option value="">-- wählen --</option>
+            <option value="освобожденный">освобожденный</option>
+            <option value="освобождённый">освобождённый</option>
+            <option value="освободитый">освободитый</option>
+        </select>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex9')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex9')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex9')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 10 -->
+    <div class="exercise-card" id="ex10">
+        <span class="exercise-title">10. Kurzform Bildung:</span>
+        <div class="sentence-box">
+            Эта задача была <span class="error-highlight">решита</span> вчера.
+        </div>
+        Korrektur: 
+        <select data-ans="решена">
+            <option value="">-- wählen --</option>
+            <option value="решена">решена</option>
+            <option value="решённа">решённа</option>
+            <option value="решита">решита</option>
+        </select>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex10')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex10')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex10')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 11 -->
+    <div class="exercise-card" id="ex11">
+        <span class="exercise-title">11. Suffix -т- bei einsilbigen Stämmen:</span>
+        <div class="sentence-box">
+            Дверь была <span class="error-highlight">открытаная</span>.
+        </div>
+        Korrektur: 
+        <select data-ans="открытая">
+            <option value="">-- wählen --</option>
+            <option value="открытенная">открытенная</option>
+            <option value="открытая">открытая</option>
+            <option value="открыннная">открыннная</option>
+        </select>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex11')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex11')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex11')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 12 -->
+    <div class="exercise-card" id="ex12">
+        <span class="exercise-title">12. Kasus-Endung (Genitiv maskulin):</span>
+        <div class="sentence-box">
+            В комнате нет <span class="error-highlight">построенный</span> шкафа.
+        </div>
+        Korrektur: 
+        <select data-ans="построенного">
+            <option value="">-- wählen --</option>
+            <option value="построенном">построенном</option>
+            <option value="построенного">построенного</option>
+            <option value="построенному">построенному</option>
+        </select>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex12')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex12')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex12')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function checkEx(id) {
+        const card = document.getElementById(id);
+        const selects = card.querySelectorAll('select');
+        selects.forEach(sel => {
+            if (sel.value === "") {
+                sel.classList.remove('correct', 'incorrect', 'sol-active');
+            } else if (sel.value === sel.getAttribute('data-ans')) {
+                sel.classList.remove('incorrect', 'sol-active');
+                sel.classList.add('correct');
+            } else {
+                sel.classList.remove('correct', 'sol-active');
+                sel.classList.add('incorrect');
+            }
+        });
+    }
+
+    function resetEx(id) {
+        const card = document.getElementById(id);
+        const selects = card.querySelectorAll('select');
+        selects.forEach(sel => {
+            sel.value = "";
+            sel.classList.remove('correct', 'incorrect', 'sol-active');
+        });
+    }
+
+    function solveEx(id) {
+        const card = document.getElementById(id);
+        const selects = card.querySelectorAll('select');
+        selects.forEach(sel => {
+            sel.value = sel.getAttribute('data-ans');
+            sel.classList.remove('correct', 'incorrect');
+            sel.classList.add('sol-active');
+        });
+    }
+</script>
+
+</body>
+</html>
