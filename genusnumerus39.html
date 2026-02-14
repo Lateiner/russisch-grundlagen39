@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Genus- & Numerus-Matching</title>
+    <!-- Polyfill für Drag & Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --dropzone-bg: #f9f9f9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .intro-box {
+            background: #eef7fd;
+            border-left: 5px solid var(--secondary-color);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .exercise-card {
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 40px;
+            background: #fff;
+        }
+
+        .exercise-title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            font-size: 1.1em;
+        }
+
+        /* Drag & Drop Bereiche */
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f1f3f5;
+            border-radius: 8px;
+            min-height: 50px;
+        }
+
+        .draggable {
+            background: white;
+            border: 1px solid var(--secondary-color);
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: move;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 1rem;
+        }
+
+        .matching-table {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .dropzone-container {
+            background: var(--dropzone-bg);
+            border: 2px dashed #adb5bd;
+            border-radius: 8px;
+            padding: 10px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .dropzone-label {
+            font-weight: bold;
+            font-size: 0.9em;
+            text-align: center;
+            color: #495057;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        /* Buttons */
+        .button-row {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        button.action-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); color: white; }
+        .btn-reset { background-color: #adb5bd; color: white; }
+        .btn-solution { background-color: #fff; color: var(--success-color); border: 2px solid var(--success-color); }
+
+        /* Status-Farben */
+        .correct { color: var(--success-color) !important; font-weight: bold; }
+        .incorrect { color: var(--error-color) !important; text-decoration: line-through; }
+        .sol-active { color: var(--success-color) !important; font-weight: bold !important; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .matching-table { grid-template-columns: 1fr; }
+            .button-row { flex-direction: column; }
+            .button-row button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Genus- & Numerus-Matching</h1>
+
+    <div class="intro-box">
+        <strong>Kurzerklärung:</strong>
+        <p>Passive Partizipien Präteritum verhalten sich wie Adjektive und müssen in Genus und Numerus mit dem Substantiv übereinstimmen:</p>
+        <ul>
+            <li><strong>Maskulin:</strong> Endung meist auf <strong>-ый</strong> (z.B. прочитанный).</li>
+            <li><strong>Feminin:</strong> Endung meist auf <strong>-ая</strong> (z.B. прочитанная).</li>
+            <li><strong>Neutrum:</strong> Endung meist auf <strong>-ое</strong> (z.B. прочитанное).</li>
+            <li><strong>Plural:</strong> Endung meist auf <strong>-ые</strong> (z.B. прочитанные).</li>
+        </ul>
+    </div>
+
+    <!-- Die Übungen werden per JavaScript generiert -->
+    <div id="exercise-container"></div>
+
+</div>
+
+<script>
+    const exerciseData = [
+        { id: 1, title: "1. Basis-Formen (прочитать)", words: [
+            { t: "прочитанный", cat: "m" }, { t: "прочитанная", cat: "f" }, 
+            { t: "прочитанное", cat: "n" }, { t: "прочитанные", cat: "pl" }
+        ]},
+        { id: 2, title: "2. Verben auf -ить (построить)", words: [
+            { t: "построенный", cat: "m" }, { t: "построенная", cat: "f" }, 
+            { t: "построенное", cat: "n" }, { t: "построенные", cat: "pl" }
+        ]},
+        { id: 3, title: "3. Verben mit Suffix -т- (открыть)", words: [
+            { t: "открытый", cat: "m" }, { t: "открытая", cat: "f" }, 
+            { t: "открытое", cat: "n" }, { t: "открытые", cat: "pl" }
+        ]},
+        { id: 4, title: "4. Verben mit Konsonantenwechsel (купить)", words: [
+            { t: "купленный", cat: "m" }, { t: "купленная", cat: "f" }, 
+            { t: "купленное", cat: "n" }, { t: "купленные", cat: "pl" }
+        ]},
+        { id: 5, title: "5. Gemischte Verben (сделать / забыть)", words: [
+            { t: "сделанный", cat: "m" }, { t: "сделанная", cat: "f" }, 
+            { t: "забытое", cat: "n" }, { t: "забытые", cat: "pl" }
+        ]},
+        { id: 6, title: "6. Gemischte Verben (решить / увидеть)", words: [
+            { t: "решённый", cat: "m" }, { t: "увиденная", cat: "f" }, 
+            { t: "решённое", cat: "n" }, { t: "увиденные", cat: "pl" }
+        ]},
+        { id: 7, title: "7. Fokus Feminin & Plural", words: [
+            { t: "приготовленная", cat: "f" }, { t: "приготовленные", cat: "pl" }, 
+            { t: "полученная", cat: "f" }, { t: "полученные", cat: "pl" }
+        ]},
+        { id: 8, title: "8. Fokus Maskulin & Neutrum", words: [
+            { t: "взятый", cat: "m" }, { t: "взятое", cat: "n" }, 
+            { t: "изученный", cat: "m" }, { t: "изученное", cat: "n" }
+        ]},
+        { id: 9, title: "9. Verben auf -ять (потерять)", words: [
+            { t: "потерянный", cat: "m" }, { t: "потерянная", cat: "f" }, 
+            { t: "потерянное", cat: "n" }, { t: "потерянные", cat: "pl" }
+        ]},
+        { id: 10, title: "10. Kurze Formen Erkennung (Vollform Matching)", words: [
+            { t: "написанный", cat: "m" }, { t: "написанная", cat: "f" }, 
+            { t: "написанное", cat: "n" }, { t: "написанные", cat: "pl" }
+        ]},
+        { id: 11, title: "11. Schwierigere Konsonantenwechsel (встретить)", words: [
+            { t: "встреченный", cat: "m" }, { t: "встреченная", cat: "f" }, 
+            { t: "встреченное", cat: "n" }, { t: "встреченные", cat: "pl" }
+        ]},
+        { id: 12, title: "12. Abschluss-Mix", words: [
+            { t: "принесённый", cat: "m" }, { t: "одетые", cat: "pl" }, 
+            { t: "закрытая", cat: "f" }, { t: "проданное", cat: "n" }
+        ]}
+    ];
+
+    function createExercises() {
+        const container = document.getElementById('exercise-container');
+        exerciseData.forEach(ex => {
+            const card = document.createElement('div');
+            card.className = 'exercise-card';
+            card.id = `ex-${ex.id}`;
+            
+            let poolHtml = '';
+            // Mischen der Wörter für den Pool
+            const shuffledWords = [...ex.words].sort(() => Math.random() - 0.5);
+            shuffledWords.forEach((w, i) => {
+                poolHtml += `<div class="draggable" draggable="true" id="drag-${ex.id}-${i}" data-cat="${w.cat}">${w.t}</div>`;
+            });
+
+            card.innerHTML = `
+                <span class="exercise-title">${ex.title}</span>
+                <div class="drag-pool" id="pool-${ex.id}">${poolHtml}</div>
+                <div class="matching-table">
+                    <div class="dropzone-container" data-accept="m">
+                        <div class="dropzone-label">Maskulin (он)</div>
+                    </div>
+                    <div class="dropzone-container" data-accept="f">
+                        <div class="dropzone-label">Feminin (она)</div>
+                    </div>
+                    <div class="dropzone-container" data-accept="n">
+                        <div class="dropzone-label">Neutrum (оно)</div>
+                    </div>
+                    <div class="dropzone-container" data-accept="pl">
+                        <div class="dropzone-label">Plural (они)</div>
+                    </div>
+                </div>
+                <div class="button-row">
+                    <button class="action-btn btn-check" onclick="checkExercise(${ex.id})">Überprüfen</button>
+                    <button class="action-btn btn-reset" onclick="resetExercise(${ex.id})">Zurücksetzen</button>
+                    <button class="action-btn btn-solution" onclick="showSolution(${ex.id})">Lösung anzeigen</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        initDragAndDrop();
+    }
+
+    let draggedElement = null;
+
+    function initDragAndDrop() {
+        const draggables = document.querySelectorAll('.draggable');
+        const containers = document.querySelectorAll('.dropzone-container, .drag-pool');
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggedElement = draggable;
+                draggable.style.opacity = '0.5';
+            });
+
+            draggable.addEventListener('dragend', () => {
+                draggable.style.opacity = '1';
+                draggedElement = null;
+            });
+        });
+
+        containers.forEach(container => {
+            container.addEventListener('dragover', e => {
+                e.preventDefault();
+            });
+
+            container.addEventListener('drop', e => {
+                e.preventDefault();
+                if (draggedElement) {
+                    container.appendChild(draggedElement);
+                    // Entferne Feedback beim Verschieben
+                    draggedElement.classList.remove('correct', 'incorrect', 'sol-active');
+                }
+            });
+        });
+    }
+
+    function checkExercise(id) {
+        const card = document.getElementById(`ex-${id}`);
+        const dropzones = card.querySelectorAll('.dropzone-container');
+        
+        dropzones.forEach(zone => {
+            const acceptedCat = zone.getAttribute('data-accept');
+            const items = zone.querySelectorAll('.draggable');
+            items.forEach(item => {
+                item.classList.remove('correct', 'incorrect', 'sol-active');
+                if (item.getAttribute('data-cat') === acceptedCat) {
+                    item.classList.add('correct');
+                } else {
+                    item.classList.add('incorrect');
+                }
+            });
+        });
+    }
+
+    function resetExercise(id) {
+        const card = document.getElementById(`ex-${id}`);
+        const pool = card.querySelector('.drag-pool');
+        const items = card.querySelectorAll('.draggable');
+        items.forEach(item => {
+            item.classList.remove('correct', 'incorrect', 'sol-active');
+            pool.appendChild(item);
+        });
+    }
+
+    function showSolution(id) {
+        const card = document.getElementById(`ex-${id}`);
+        const items = card.querySelectorAll('.draggable');
+        const dropzones = card.querySelectorAll('.dropzone-container');
+
+        items.forEach(item => {
+            const cat = item.getAttribute('data-cat');
+            const targetZone = card.querySelector(`.dropzone-container[data-accept="${cat}"]`);
+            item.classList.remove('correct', 'incorrect');
+            item.classList.add('sol-active');
+            targetZone.appendChild(item);
+        });
+    }
+
+    window.onload = createExercises;
+</script>
+
+</body>
+</html>
