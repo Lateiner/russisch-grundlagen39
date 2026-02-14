@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Passive Partizipien Präteritum</title>
+    <!-- Polyfill für Drag & Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --btn-reset: #95a5a6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .intro-box {
+            background: #eef7fd;
+            border-left: 5px solid var(--secondary-color);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .exercise-card {
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            background: #fff;
+        }
+
+        .exercise-title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            font-size: 1.1em;
+        }
+
+        /* Interaktive Elemente */
+        select, .dropzone {
+            padding: 8px;
+            font-size: 1rem;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            background-color: #fff;
+            outline: none;
+        }
+
+        .dropzone {
+            display: inline-flex;
+            min-width: 160px;
+            min-height: 35px;
+            vertical-align: middle;
+            background-color: #fdfdfd;
+            border: 2px dashed #adb5bd;
+            justify-content: center;
+            align-items: center;
+            margin: 5px;
+        }
+
+        .drag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f1f3f5;
+            border-radius: 6px;
+            min-height: 45px;
+        }
+
+        .draggable {
+            background: white;
+            border: 1px solid var(--secondary-color);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: move;
+            user-select: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .choice-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .choice-btn {
+            background: #fff;
+            border: 2px solid #dee2e6;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .choice-btn.selected {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        /* Buttons */
+        .button-row {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        button.action-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); color: white; }
+        .btn-reset { background-color: var(--btn-reset); color: white; }
+        .btn-solution { background-color: #fff; color: var(--success-color); border: 2px solid var(--success-color); }
+
+        /* Zustände */
+        .correct { border-color: var(--success-color) !important; color: var(--success-color) !important; background-color: #f0fff4 !important; }
+        .incorrect { border-color: var(--error-color) !important; background-color: #fff5f5 !important; }
+        .sol-active { border-color: var(--success-color) !important; color: var(--success-color) !important; font-weight: bold !important; background-color: #f0fff4 !important; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .button-row { flex-direction: column; }
+            .button-row button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Bildung & Verwendung: Passive Partizipien Präteritum</h1>
+
+    <div class="intro-box">
+        <strong>Wichtige Voraussetzungen:</strong>
+        <p>Ein passives Partizip Präteritum (Страдательное причастие прошедшего времени) kann nur gebildet werden, wenn das Verb:</p>
+        <ul>
+            <li>im <strong>vollendeten Aspekt (СВ)</strong> steht und</li>
+            <li><strong>transitiv</strong> ist (ein Objekt im Akkusativ ohne Präposition erlaubt).</li>
+        </ul>
+    </div>
+
+    <!-- AUFGABE 1: Aspekt-Check -->
+    <div class="exercise-card" id="ex1">
+        <span class="exercise-title">1. Aspekt-Check: Kann von diesem Verb ein passives Partizip Präteritum gebildet werden?</span>
+        <div class="choice-group">
+            прочитать (СВ): 
+            <button class="choice-btn" data-ex="1a" data-ans="true">Ja</button>
+            <button class="choice-btn" data-ex="1a" data-ans="false">Nein</button>
+        </div><br>
+        <div class="choice-group">
+            читать (НСВ): 
+            <button class="choice-btn" data-ex="1b" data-ans="false">Ja</button>
+            <button class="choice-btn" data-ex="1b" data-ans="true">Nein</button>
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkChoice('ex1')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetChoice('ex1')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveChoice('ex1')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 2: Transitivitäts-Check -->
+    <div class="exercise-card" id="ex2">
+        <span class="exercise-title">2. Transitivitäts-Check: Welche Verben erlauben ein passives Partizip?</span>
+        <div class="choice-group">
+            построить (Haus bauen): 
+            <button class="choice-btn" data-ex="2a" data-ans="true">Möglich</button>
+            <button class="choice-btn" data-ex="2a" data-ans="false">Nicht möglich</button>
+        </div><br>
+        <div class="choice-group">
+            прийти (ankommen - intransitiv): 
+            <button class="choice-btn" data-ex="2b" data-ans="false">Möglich</button>
+            <button class="choice-btn" data-ex="2b" data-ans="true">Nicht möglich</button>
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkChoice('ex2')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetChoice('ex2')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveChoice('ex2')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 3: Suffixe wählen -->
+    <div class="exercise-card" id="ex3">
+        <span class="exercise-title">3. Suffix-Wahl: Welches Suffix passt?</span>
+        сделать &rarr; сдела<select data-ans="нн">
+            <option value="">--</option>
+            <option value="нн">нн</option>
+            <option value="енн">енн</option>
+            <option value="т">т</option>
+        </select>ый
+        <br><br>
+        открыть &rarr; откры<select data-ans="т">
+            <option value="">--</option>
+            <option value="нн">нн</option>
+            <option value="енн">енн</option>
+            <option value="т">т</option>
+        </select>ый
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkSelect('ex3')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex3')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveSelect('ex3')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 4: Konsonantenwechsel т -> ч -->
+    <div class="exercise-card" id="ex4">
+        <span class="exercise-title">4. Konsonantenwechsel: встретить &rarr; ?</span>
+        встрети<select data-ans="ч">
+            <option value="">--</option>
+            <option value="т">т</option>
+            <option value="ч">ч</option>
+            <option value="щ">щ</option>
+        </select>енный
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkSelect('ex4')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex4')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveSelect('ex4')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 5: Konsonantenwechsel п -> пл -->
+    <div class="exercise-card" id="ex5">
+        <span class="exercise-title">5. Konsonantenwechsel: купить &rarr; ?</span>
+        ку<select data-ans="пл">
+            <option value="">--</option>
+            <option value="п">п</option>
+            <option value="пл">пл</option>
+        </select>енный
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkSelect('ex5')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex5')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveSelect('ex5')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 6: Dynamisches Drag & Drop -->
+    <div class="exercise-card" id="ex6">
+        <span class="exercise-title">6. Zuordnung (Mischen beim Zurücksetzen):</span>
+        <div class="drag-container" id="drag_pool_6"></div>
+        Suffix -нн-: <div class="dropzone" id="dz6_nn" data-ans-cat="nn"></div> <br>
+        Suffix -енн-: <div class="dropzone" id="dz6_enn" data-ans-cat="enn"></div> <br>
+        Suffix -т-: <div class="dropzone" id="dz6_t" data-ans-cat="t"></div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkDragDynamic('ex6')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="initTask6()">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveDragDynamic('ex6')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 7: Vokal vor -нн- -->
+    <div class="exercise-card" id="ex7">
+        <span class="exercise-title">7. Welcher Vokal bleibt vor -нн- (написать)?</span>
+        напис<select data-ans="а">
+            <option value="">?</option>
+            <option value="а">а</option>
+            <option value="е">е</option>
+        </select>нный
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkSelect('ex7')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex7')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveSelect('ex7')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 8: Partizip von „увидеть“ -->
+    <div class="exercise-card" id="ex8">
+        <span class="exercise-title">8. Bildung von „увидеть“:</span>
+        увид<select data-ans="енн">
+            <option value="">--</option>
+            <option value="енн">енн</option>
+            <option value="янн">янн</option>
+        </select>ый
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkSelect('ex8')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex8')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveSelect('ex8')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 9: Wechsel д -> жд -->
+    <div class="exercise-card" id="ex9">
+        <span class="exercise-title">9. Konsonantenwechsel: освободить &rarr; ?</span>
+        освобо<select data-ans="жд">
+            <option value="">--</option>
+            <option value="ж">ж</option>
+            <option value="жд">жд</option>
+        </select>ённый
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkSelect('ex9')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex9')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveSelect('ex9')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 10: Partizip von „решить“ -->
+    <div class="exercise-card" id="ex10">
+        <span class="exercise-title">10. Betonung & Suffix: решить &rarr; ?</span>
+        реш<select data-ans="ённ">
+            <option value="">--</option>
+            <option value="енн">енн</option>
+            <option value="ённ">ённ</option>
+        </select>ый
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkSelect('ex10')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex10')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveSelect('ex10')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 11: Wechsel ст -> щ -->
+    <div class="exercise-card" id="ex11">
+        <span class="exercise-title">11. Konsonantenwechsel: вырастить &rarr; ?</span>
+        выра<select data-ans="щ">
+            <option value="">--</option>
+            <option value="ст">ст</option>
+            <option value="щ">щ</option>
+        </select>енный
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkSelect('ex11')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex11')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveSelect('ex11')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE 12: Kasus-Check (Akkusativ Feminin) -->
+    <div class="exercise-card" id="ex12">
+        <span class="exercise-title">12. Kasus-Anpassung: „Ich sehe die (geschriebene) Aufgabe.“</span>
+        Я вижу (написанная) написанн<select data-ans="ую">
+            <option value="">--</option>
+            <option value="ая">ая</option>
+            <option value="ую">ую</option>
+            <option value="ой">ой</option>
+        </select> задачу.
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkSelect('ex12')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex12')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveSelect('ex12')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- Daten für die variable Aufgabe 6 ---
+    const pool6Data = {
+        nn: ["рассказать", "написать", "прочитать", "потерять"],
+        enn: ["получить", "решить", "встретить", "построить"],
+        t: ["забыть", "взяter", "открыть", "одеть"]
+    };
+
+    function initTask6() {
+        const container = document.getElementById('drag_pool_6');
+        container.innerHTML = '';
+        
+        // Reset Dropzones
+        document.querySelectorAll('#ex6 .dropzone').forEach(dz => {
+            dz.innerHTML = '';
+            dz.className = 'dropzone';
+            dz.removeAttribute('data-correct-id');
+        });
+
+        // Ein Wort pro Kategorie wählen
+        let words = [
+            { word: pool6Data.nn[Math.floor(Math.random() * pool6Data.nn.length)], cat: 'nn' },
+            { word: pool6Data.enn[Math.floor(Math.random() * pool6Data.enn.length)], cat: 'enn' },
+            { word: pool6Data.t[Math.floor(Math.random() * pool6Data.t.length)], cat: 't' }
+        ];
+
+        // Mischen
+        words.sort(() => Math.random() - 0.5);
+
+        words.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'draggable';
+            div.draggable = true;
+            div.id = 'drag6_val_' + index;
+            div.innerText = item.word;
+            div.setAttribute('data-cat', item.cat);
+            
+            div.addEventListener('dragstart', e => { 
+                e.dataTransfer.setData('text/plain', div.id);
+            });
+            container.appendChild(div);
+
+            // Korrekte Ziel-ID speichern
+            const targetDz = document.querySelector(`#ex6 [data-ans-cat="${item.cat}"]`);
+            targetDz.setAttribute('data-correct-id', div.id);
+        });
+    }
+
+    // --- Drag & Drop Logik ---
+    document.querySelectorAll('.dropzone').forEach(zone => {
+        zone.addEventListener('dragover', e => e.preventDefault());
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain');
+            const draggedItem = document.getElementById(id);
+            if (draggedItem) {
+                if (zone.children.length > 0) {
+                    const existing = zone.children[0];
+                    document.getElementById('drag_pool_6').appendChild(existing);
+                }
+                zone.appendChild(draggedItem);
+            }
+        });
+    });
+
+    // --- Funktionen zur Validierung ---
+    function checkSelect(id) {
+        const selects = document.querySelectorAll(`#${id} select`);
+        selects.forEach(s => {
+            s.classList.remove('correct', 'incorrect', 'sol-active');
+            if (s.value === s.getAttribute('data-ans')) s.classList.add('correct');
+            else if (s.value !== "") s.classList.add('incorrect');
+        });
+    }
+
+    function solveSelect(id) {
+        const selects = document.querySelectorAll(`#${id} select`);
+        selects.forEach(s => {
+            s.value = s.getAttribute('data-ans');
+            s.classList.remove('incorrect', 'correct');
+            s.classList.add('sol-active');
+        });
+    }
+
+    function resetEx(id) {
+        document.querySelectorAll(`#${id} select`).forEach(s => {
+            s.value = "";
+            s.classList.remove('correct', 'incorrect', 'sol-active');
+        });
+    }
+
+    function checkChoice(id) {
+        const btns = document.querySelectorAll(`#${id} .choice-btn`);
+        btns.forEach(b => {
+            b.classList.remove('correct', 'incorrect', 'sol-active');
+            if (b.classList.contains('selected')) {
+                if (b.getAttribute('data-ans') === 'true') b.classList.add('correct');
+                else b.classList.add('incorrect');
+            }
+        });
+    }
+
+    function solveChoice(id) {
+        const btns = document.querySelectorAll(`#${id} .choice-btn`);
+        btns.forEach(b => {
+            b.classList.remove('selected', 'correct', 'incorrect');
+            if (b.getAttribute('data-ans') === 'true') b.classList.add('sol-active');
+        });
+    }
+
+    function resetChoice(id) {
+        document.querySelectorAll(`#${id} .choice-btn`).forEach(b => b.classList.remove('selected', 'correct', 'incorrect', 'sol-active'));
+    }
+
+    function checkDragDynamic(id) {
+        const zones = document.querySelectorAll(`#${id} .dropzone`);
+        zones.forEach(z => {
+            z.classList.remove('correct', 'incorrect', 'sol-active');
+            const child = z.children[0];
+            if (child) {
+                if (child.getAttribute('data-cat') === z.getAttribute('data-ans-cat')) {
+                    z.classList.add('correct');
+                } else {
+                    z.classList.add('incorrect');
+                }
+            }
+        });
+    }
+
+    function solveDragDynamic(id) {
+        const zones = document.querySelectorAll(`#${id} .dropzone`);
+        zones.forEach(z => {
+            const correctId = z.getAttribute('data-correct-id');
+            const item = document.getElementById(correctId);
+            if(item) {
+                z.appendChild(item);
+                z.className = 'dropzone sol-active';
+            }
+        });
+    }
+
+    // Button Selection Logic
+    document.querySelectorAll('.choice-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const group = btn.getAttribute('data-ex');
+            document.querySelectorAll(`.choice-btn[data-ex="${group}"]`).forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        });
+    });
+
+    window.onload = initTask6;
+</script>
+
+</body>
+</html>
