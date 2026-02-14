@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantik-Training: Aktion vs. Ergebnis</title>
+    <!-- Polyfill für Drag & Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e67e22;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .intro-box {
+            background: #eef7fd;
+            border-left: 5px solid var(--secondary-color);
+            padding: 20px;
+            margin-bottom: 35px;
+            border-radius: 4px;
+        }
+
+        .exercise-card {
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 40px;
+            background: #fff;
+        }
+
+        .exercise-title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            font-size: 1.1em;
+        }
+
+        .visual-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .visual-item {
+            text-align: center;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .emoji-large {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .dropzone {
+            width: 100%;
+            min-height: 50px;
+            border: 2px dashed #adb5bd;
+            border-radius: 8px;
+            background: #fdfdfd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f1f3f5;
+            border-radius: 8px;
+            min-height: 60px;
+            justify-content: center;
+        }
+
+        .draggable {
+            background: white;
+            border: 2px solid var(--secondary-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: move;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-weight: 500;
+        }
+
+        .button-row {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        button.action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); color: white; }
+        .btn-reset { background-color: #adb5bd; color: white; }
+        .btn-solution { background-color: #fff; color: var(--success-color); border: 2px solid var(--success-color); }
+
+        /* Zustände */
+        .correct { border-color: var(--success-color) !important; background-color: #f0fff4 !important; }
+        .incorrect { border-color: var(--error-color) !important; background-color: #fff5f0 !important; }
+        .sol-active { 
+            color: var(--success-color) !important; 
+            font-weight: bold !important; 
+            border: 2px solid var(--success-color) !important;
+            background-color: #f0fff4 !important;
+        }
+
+        .label-text {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .button-row { flex-direction: column; }
+            .button-row button { width: 100%; }
+            .emoji-large { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Aktion vs. Ergebnis</h1>
+
+    <div class="intro-box">
+        <strong>Semantik-Check:</strong>
+        <p>Ordne die Begriffe den Bildern zu. Unterscheide zwischen:</p>
+        <ul>
+            <li><strong>Aktion (Infinitiv):</strong> Was gerade getan wird oder getan werden soll.</li>
+            <li><strong>Ergebnis (Partizip):</strong> Der Zustand des Objekts, nachdem die Handlung abgeschlossen wurde.</li>
+        </ul>
+    </div>
+
+    <!-- Aufgaben Container -->
+    <div id="exercise-wrapper"></div>
+
+</div>
+
+<script>
+    const taskData = [
+        { id: 1, actionEmoji: "👨‍🍳🍕", resultEmoji: "🍽️🍕", actionWord: "приготовить", resultWord: "приготовленная", title: "1. Pizza kochen" },
+        { id: 2, actionEmoji: "✍️✉️", resultEmoji: "📮✉️", actionWord: "написать", resultWord: "написанное", title: "2. Brief schreiben" },
+        { id: 3, actionEmoji: "👷🏠", resultEmoji: "🏘️🏠", actionWord: "построить", resultWord: "построенный", title: "3. Haus bauen" },
+        { id: 4, actionEmoji: "🔓🚪", resultEmoji: "🚪✅", actionWord: "открыть", resultWord: "открытая", title: "4. Tür öffnen" },
+        { id: 5, actionEmoji: "👨‍🎓📚", resultEmoji: "📝✅", actionWord: "сделать", resultWord: "сделанное", title: "5. Hausaufgabe machen" },
+        { id: 6, actionEmoji: "🧼🪟", resultEmoji: "✨🪟", actionWord: "помыть", resultWord: "помытое", title: "6. Fenster putzen" },
+        { id: 7, actionEmoji: "🛒👗", resultEmoji: "🛍️👗", actionWord: "купить", resultWord: "купленное", title: "7. Kleid kaufen" },
+        { id: 8, actionEmoji: "🎨🖼️", resultEmoji: "🏛️🖼️", actionWord: "нарисовать", resultWord: "нарисованная", title: "8. Bild malen" },
+        { id: 9, actionEmoji: "📖📔", resultEmoji: "🧠📔", actionWord: "прочитать", resultWord: "прочитанная", title: "9. Buch lesen" },
+        { id: 10, actionEmoji: "🎁🎀", resultEmoji: "🤝🎁", actionWord: "подарить", resultWord: "подаренный", title: "10. Geschenk schenken" },
+        { id: 11, actionEmoji: "🧩🤔", resultEmoji: "💡✅", actionWord: "решить", resultWord: "решённая", title: "11. Aufgabe lösen" },
+        { id: 12, actionEmoji: "☕🏃", resultEmoji: "☕👔", actionWord: "принести", resultWord: "принесённый", title: "12. Kaffee bringen" }
+    ];
+
+    function initExercises() {
+        const wrapper = document.getElementById('exercise-wrapper');
+        taskData.forEach(task => {
+            const card = document.createElement('div');
+            card.className = 'exercise-card';
+            card.id = `ex-${task.id}`;
+
+            const words = [task.actionWord, task.resultWord].sort(() => Math.random() - 0.5);
+
+            card.innerHTML = `
+                <span class="exercise-title">${task.title}</span>
+                <div class="drag-pool" id="pool-${task.id}">
+                    ${words.map((w, i) => `<div class="draggable" draggable="true" id="drag-${task.id}-${i}">${w}</div>`).join('')}
+                </div>
+                <div class="visual-container">
+                    <div class="visual-item">
+                        <div class="label-text">Die Handlung</div>
+                        <span class="emoji-large">${task.actionEmoji}</span>
+                        <div class="dropzone" data-ans="${task.actionWord}"></div>
+                    </div>
+                    <div class="visual-item">
+                        <div class="label-text">Das Ergebnis</div>
+                        <span class="emoji-large">${task.resultEmoji}</span>
+                        <div class="dropzone" data-ans="${task.resultWord}"></div>
+                    </div>
+                </div>
+                <div class="button-row">
+                    <button class="action-btn btn-check" onclick="checkEx(${task.id})">Überprüfen</button>
+                    <button class="action-btn btn-reset" onclick="resetEx(${task.id})">Zurücksetzen</button>
+                    <button class="action-btn btn-solution" onclick="solveEx(${task.id})">Lösung anzeigen</button>
+                </div>
+            `;
+            wrapper.appendChild(card);
+        });
+
+        setupDragDrop();
+    }
+
+    let draggedId = null;
+
+    function setupDragDrop() {
+        document.addEventListener('dragstart', e => {
+            if (e.target.classList.contains('draggable')) {
+                draggedId = e.target.id;
+                e.dataTransfer.setData('text/plain', e.target.id);
+            }
+        });
+
+        document.querySelectorAll('.dropzone, .drag-pool').forEach(zone => {
+            zone.addEventListener('dragover', e => e.preventDefault());
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                const item = document.getElementById(draggedId);
+                if (item) {
+                    if (zone.classList.contains('dropzone') && zone.children.length > 0) {
+                        const existing = zone.children[0];
+                        const pool = zone.closest('.exercise-card').querySelector('.drag-pool');
+                        pool.appendChild(existing);
+                    }
+                    zone.appendChild(item);
+                    item.classList.remove('sol-active');
+                    zone.classList.remove('correct', 'incorrect');
+                }
+            });
+        });
+    }
+
+    function checkEx(id) {
+        const card = document.getElementById(`ex-${id}`);
+        card.querySelectorAll('.dropzone').forEach(dz => {
+            dz.classList.remove('correct', 'incorrect');
+            const child = dz.children[0];
+            if (child) {
+                if (child.innerText === dz.getAttribute('data-ans')) {
+                    dz.classList.add('correct');
+                } else {
+                    dz.classList.add('incorrect');
+                }
+            }
+        });
+    }
+
+    function resetEx(id) {
+        const card = document.getElementById(`ex-${id}`);
+        const pool = card.querySelector('.drag-pool');
+        card.querySelectorAll('.dropzone').forEach(dz => {
+            if (dz.children.length > 0) {
+                pool.appendChild(dz.children[0]);
+            }
+            dz.classList.remove('correct', 'incorrect');
+        });
+        card.querySelectorAll('.draggable').forEach(d => d.classList.remove('sol-active'));
+    }
+
+    function solveEx(id) {
+        const card = document.getElementById(`ex-${id}`);
+        const draggables = Array.from(card.querySelectorAll('.draggable'));
+        card.querySelectorAll('.dropzone').forEach(dz => {
+            const correctText = dz.getAttribute('data-ans');
+            const item = draggables.find(d => d.innerText === correctText);
+            if (item) {
+                dz.appendChild(item);
+                item.classList.add('sol-active');
+                dz.classList.add('correct');
+            }
+        });
+    }
+
+    window.onload = initExercises;
+</script>
+
+</body>
+</html>
