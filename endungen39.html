@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Deklination der passiven Partizipien</title>
+    <!-- Polyfill für Drag & Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --solution-color: #27ae60;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .intro-box {
+            background: #eef7fd;
+            border-left: 5px solid var(--secondary-color);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .exercise-card {
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            background: #fff;
+            transition: transform 0.2s;
+        }
+
+        .exercise-title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            font-size: 1.1em;
+        }
+
+        .sentence {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            line-height: 2;
+        }
+
+        .participle-stem {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        select {
+            padding: 5px 10px;
+            font-size: 1rem;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        /* Buttons */
+        .button-row {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        button.action-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); color: white; }
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-solution { background-color: #fff; color: var(--success-color); border: 2px solid var(--success-color); }
+
+        button.action-btn:hover { opacity: 0.8; }
+
+        /* Status-Klassen */
+        .correct { border-color: var(--success-color) !important; color: var(--success-color) !important; background-color: #f0fff4 !important; }
+        .incorrect { border-color: var(--error-color) !important; background-color: #fff5f5 !important; }
+        .sol-active { border-color: var(--success-color) !important; color: var(--success-color) !important; font-weight: bold !important; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .button-row { flex-direction: column; }
+            .button-row button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Deklination der passiven Partizipien</h1>
+
+    <div class="intro-box">
+        <strong>Anleitung:</strong>
+        <p>Wähle die korrekte Endung für das Partizip. Achte auf den Kasus, Numerus und das Genus des Substantivs im Satz.</p>
+        <p>Beispiel: „Я вижу (купить) купленн<strong>ую</strong> машину.“ (Akkusativ, feminin)</p>
+    </div>
+
+    <!-- Aufgabe 1 -->
+    <div class="exercise-card" id="ex1">
+        <span class="exercise-title">1. Akkusativ (maskulin, inanimat):</span>
+        <div class="sentence">
+            Я вижу вчера купленн<select data-ans="ый">
+                <option value="">--</option>
+                <option value="ый">ый</option>
+                <option value="ого">ого</option>
+                <option value="ом">ом</option>
+            </select> дом.
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex1')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex1')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex1')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Aufgabe 2 -->
+    <div class="exercise-card" id="ex2">
+        <span class="exercise-title">2. Genitiv (feminin):</span>
+        <div class="sentence">
+            В шкафу нет написанн<select data-ans="ой">
+                <option value="">--</option>
+                <option value="ую">ую</option>
+                <option value="ой">ой</option>
+                <option value="ая">ая</option>
+            </select> открытки.
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex2')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex2')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex2')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Aufgabe 3 -->
+    <div class="exercise-card" id="ex3">
+        <span class="exercise-title">3. Dativ (maskulin):</span>
+        <div class="sentence">
+            Мы подошли к открыт<select data-ans="ому">
+                <option value="">--</option>
+                <option value="ым">ым</option>
+                <option value="ому">ому</option>
+                <option value="ого">ого</option>
+            </select> окну.
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex3')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex3')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex3')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Aufgabe 4 -->
+    <div class="exercise-card" id="ex4">
+        <span class="exercise-title">4. Instrumental (sächliche):</span>
+        <div class="sentence">
+            Он доволен решённ<select data-ans="ым">
+                <option value="">--</option>
+                <option value="ом">ом</option>
+                <option value="ым">ым</option>
+                <option value="ого">ого</option>
+            </select> заданием.
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex4')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex4')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex4')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Aufgabe 5 -->
+    <div class="exercise-card" id="ex5">
+        <span class="exercise-title">5. Präpositiv (Plural):</span>
+        <div class="sentence">
+            Мы мечтаем о полученн<select data-ans="ых">
+                <option value="">--</option>
+                <option value="ыми">ыми</option>
+                <option value="ых">ых</option>
+                <option value="ым">ым</option>
+            </select> подарках.
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex5')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex5')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex5')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Aufgabe 6 -->
+    <div class="exercise-card" id="ex6">
+        <span class="exercise-title">6. Nominativ (feminin):</span>
+        <div class="sentence">
+            Приготовленн<select data-ans="ая">
+                <option value="">--</option>
+                <option value="ая">ая</option>
+                <option value="ую">ую</option>
+                <option value="ой">ой</option>
+            </select> пицца стоит на столе.
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex6')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex6')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex6')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Aufgabe 7 -->
+    <div class="exercise-card" id="ex7">
+        <span class="exercise-title">7. Akkusativ (feminin):</span>
+        <div class="sentence">
+            Он прочитал полученн<select data-ans="ую">
+                <option value="">--</option>
+                <option value="ая">ая</option>
+                <option value="ую">ую</option>
+                <option value="ой">ой</option>
+            </select> книгу.
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex7')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex7')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex7')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Aufgabe 8 -->
+    <div class="exercise-card" id="ex8">
+        <span class="exercise-title">8. Genitiv (maskulin):</span>
+        <div class="sentence">
+            У этого построенн<select data-ans="ого">
+                <option value="">--</option>
+                <option value="ый">ый</option>
+                <option value="ого">ого</option>
+                <option value="ом">ом</option>
+            </select> здания красивый фасад.
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex8')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex8')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex8')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Aufgabe 9 -->
+    <div class="exercise-card" id="ex9">
+        <span class="exercise-title">9. Dativ (Plural):</span>
+        <div class="sentence">
+            Нужно дать воды посаженн<select data-ans="ым">
+                <option value="">--</option>
+                <option value="ые">ые</option>
+                <option value="ым">ым</option>
+                <option value="ыми">ыми</option>
+            </select> цветам.
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex9')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex9')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex9')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Aufgabe 10 -->
+    <div class="exercise-card" id="ex10">
+        <span class="exercise-title">10. Instrumental (feminin):</span>
+        <div class="sentence">
+            Она пишет новой купленн<select data-ans="ой">
+                <option value="">--</option>
+                <option value="ой">ой</option>
+                <option value="ую">ую</option>
+                <option value="ая">ая</option>
+            </select> ручкой.
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex10')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex10')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex10')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Aufgabe 11 -->
+    <div class="exercise-card" id="ex11">
+        <span class="exercise-title">11. Präpositiv (maskulin):</span>
+        <div class="sentence">
+            Мы живем в построенн<select data-ans="ом">
+                <option value="">--</option>
+                <option value="ый">ый</option>
+                <option value="ом">ом</option>
+                <option value="ого">ого</option>
+            </select> доме.
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex11')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex11')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex11')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Aufgabe 12 -->
+    <div class="exercise-card" id="ex12">
+        <span class="exercise-title">12. Nominativ (Plural):</span>
+        <div class="sentence">
+            Решённ<select data-ans="ые">
+                <option value="">--</option>
+                <option value="ых">ых</option>
+                <option value="ые">ые</option>
+                <option value="ыми">ыми</option>
+            </select> задачи были очень трудными.
+        </div>
+        <div class="button-row">
+            <button class="action-btn btn-check" onclick="checkEx('ex12')">Überprüfen</button>
+            <button class="action-btn btn-reset" onclick="resetEx('ex12')">Zurücksetzen</button>
+            <button class="action-btn btn-solution" onclick="solveEx('ex12')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function checkEx(id) {
+        const card = document.getElementById(id);
+        const selects = card.querySelectorAll('select');
+        selects.forEach(sel => {
+            if (sel.value === "") {
+                sel.classList.remove('correct', 'incorrect', 'sol-active');
+            } else if (sel.value === sel.getAttribute('data-ans')) {
+                sel.classList.remove('incorrect', 'sol-active');
+                sel.classList.add('correct');
+            } else {
+                sel.classList.remove('correct', 'sol-active');
+                sel.classList.add('incorrect');
+            }
+        });
+    }
+
+    function resetEx(id) {
+        const card = document.getElementById(id);
+        const selects = card.querySelectorAll('select');
+        selects.forEach(sel => {
+            sel.value = "";
+            sel.classList.remove('correct', 'incorrect', 'sol-active');
+        });
+    }
+
+    function solveEx(id) {
+        const card = document.getElementById(id);
+        const selects = card.querySelectorAll('select');
+        selects.forEach(sel => {
+            sel.value = sel.getAttribute('data-ans');
+            sel.classList.remove('correct', 'incorrect');
+            sel.classList.add('sol-active');
+        });
+    }
+</script>
+
+</body>
+</html>
